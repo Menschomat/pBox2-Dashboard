@@ -1,0 +1,13 @@
+.card {
+  height: 5rem;
+  justify-content: center;
+}
+.card-body {
+  display: flex;
+  align-items: center;
+}
+.range-wrapper {
+  margin-left: 1rem;
+  max-width: 15rem;
+  flex: 1;
+}

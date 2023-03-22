@@ -1,0 +1,16 @@
+<div class="card">
+  <div class="card-body">
+    <img
+      class="image"
+      [ngClass]="{ spinn: fan && fan.level >= 0 }"
+      src="assets/fan-solid.svg"
+      style="height: 3rem; width: auto; margin-right: 0.5rem; opacity: 0.6"
+    />
+    <div class="range-wrapper">
+      <label class="form-label" for="customRange1">{{ fan?.name }}</label>
+      <div class="range">
+        <input type="range" min="0" max="100" step="1" class="form-range" id="customRange1" />
+      </div>
+    </div>
+  </div>
+</div>
