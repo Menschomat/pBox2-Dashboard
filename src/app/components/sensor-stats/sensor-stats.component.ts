@@ -1,6 +1,16 @@
+import { getTestBed } from '@angular/core/testing';
+import { webSocket } from 'rxjs/webSocket';
 import { TimeSeries } from './../../model/enclosure';
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { EChartsOption } from 'echarts';
+import { WebSocketService } from 'src/app/services/web-socket.service';
 
 @Component({
   selector: 'app-sensor-stats',
@@ -14,15 +24,16 @@ export class SensorStatsComponent implements OnInit, OnChanges {
 
   chartOption: EChartsOption | undefined;
 
-  constructor() {}
+  constructor(private webSocket: WebSocketService) {}
 
   ngOnInit(): void {
+    this.webSocket.getWebsocket().subscribe((msg) => {
+      console.log(msg);
+    });
     console.log(this.timeSeries);
-    
-    
   }
   ngOnChanges(changes: SimpleChanges) {
-    if(changes["timeSeries"]){
+    if (changes['timeSeries']) {
       this.chartOption = {
         xAxis: {
           type: 'category',
@@ -41,6 +52,5 @@ export class SensorStatsComponent implements OnInit, OnChanges {
         ],
       };
     }
-
   }
 }
