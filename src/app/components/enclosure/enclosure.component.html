@@ -1,42 +1,60 @@
-<nav class="navbar sticky-top navbar-dark bg-primary">
+<nav class="navbar sticky-top navbar-dark bg-dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">{{ encName$ | async }}</a>
+    <a class="navbar-brand" href="#">{{ encName$ | async }}&nbsp;&nbsp;<app-indicator style="margin-top: .1rem;"></app-indicator></a>
+    
     <a class="navbar-brand" href="#">pBox2</a>
   </div>
 </nav>
-<div class="container">
+<div class="container p-4" *ngIf="enclosure$ | async as enc">
   <div *ngFor="let box of boxes$ | async; index as i" class="row p-3">
     <div class="col">
       <div class="card">
-        <h3 class="card-header">Printer: {{ box.name }}</h3>
-        <div class="row p-2">
-          <div class="col">
-            <h5>Fans:</h5>
-            <div>
-              <app-fan *ngFor="let fan of box.fans" [fan]="fan"></app-fan>
-            </div>
-          </div>
-          <div class="col">
-            <h5>Lights:</h5>
-            <div>
-              <app-light
-                *ngFor="let light of box.lights"
-                [light]="light"
-              ></app-light>
-            </div>
+        <div class="card-header">
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            "
+          >
+            <h3 style="width: fit-content">Printer: {{ box.name }}</h3>
+           
           </div>
         </div>
-        <hr />
-        <div class="col p-2">
-          <h5>Sensors:</h5>
-          <div>
-            <app-sensor-stats
-              *ngFor="let sensor of box.sensors"
-              [timeSeries]="sensorDataMap.get(box.id)?.get(sensor.id) | async"
-            ></app-sensor-stats>
+        <div class="card-body">
+          <div class="row p-2">
+            <div class="col">
+              <h5>Fans:</h5>
+              <div>
+                <app-fan *ngFor="let fan of box.fans" [fan]="fan"></app-fan>
+              </div>
+            </div>
+            <div class="col">
+              <h5>Lights:</h5>
+              <div>
+                <app-light
+                  *ngFor="let light of box.lights"
+                  [light]="light"
+                ></app-light>
+              </div>
+            </div>
+          </div>
+          <hr />
+          <div class="col p-2">
+            <h5>Sensors:</h5>
+            <div>
+              <app-sensor-stats
+                *ngFor="let sensor of box.sensors"
+                [encId]="enc.id"
+                [boxId]="box.id"
+                [sensorId]="sensor.id"
+                [timeSeries]="sensorDataMap.get(box.id)?.get(sensor.id) | async"
+              ></app-sensor-stats>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+

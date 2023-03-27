@@ -1,4 +1,4 @@
-import { Observable, Subject, map, BehaviorSubject } from 'rxjs';
+import { Observable, map, BehaviorSubject } from 'rxjs';
 import { Enclosure, Box, TimeSeries } from './../model/enclosure';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';

@@ -11,7 +11,7 @@ import { map, Observable } from 'rxjs';
 export class EnclosureComponent implements OnInit {
   enclosure$: Observable<Enclosure>;
   boxes$: Observable<Box[]>;
-  encName$: Observable<String>;
+  encName$: Observable<string>;
   sensorDataMap: Map<string, Map<string, Observable<TimeSeries>>> = new Map();
 
   constructor(private encService: EnclosureService) {
