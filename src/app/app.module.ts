@@ -28,6 +28,7 @@ import { MdbTooltipModule } from 'mdb-angular-ui-kit/tooltip';
 import { MdbValidationModule } from 'mdb-angular-ui-kit/validation';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IndicatorComponent } from './components/indicator/indicator.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { IndicatorComponent } from './components/indicator/indicator.component';
     NgxEchartsModule.forRoot({
       echarts: () => import('echarts')
     }),
+    FormsModule,
     MdbAccordionModule,
     MdbCarouselModule,
     MdbCheckboxModule,

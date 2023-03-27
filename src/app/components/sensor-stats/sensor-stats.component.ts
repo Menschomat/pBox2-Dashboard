@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { EChartsOption } from 'echarts';
 import { WebSocketService } from 'src/app/services/web-socket.service';
-import { filter, map } from 'rxjs';
+import { debounceTime, filter, fromEvent, map, takeWhile } from 'rxjs';
 import { SocketEventType } from 'src/app/model/events/socket-event';
 import * as echarts from 'echarts';
 
@@ -60,53 +60,60 @@ export class SensorStatsComponent implements OnInit, OnChanges {
   }
   onChartInit(ec: any) {
     this.echartsInstance = ec;
+    fromEvent(window, 'resize')
+      .pipe(debounceTime(100))
+      .subscribe((event) => {
+        this.echartsInstance?.resize();
+      });
   }
   updateChart() {
-    const min = this.timeSeries ? Math.min(...this.timeSeries.values) : 0;
-    const max = this.timeSeries ? Math.max(...this.timeSeries.values) : 0;
-    const offset = ((max - min) / 100) * 10;
-    this.chartOption = {
-      color: ['#FFBF00', '#80FFA5', '#00DDFF', '#37A2FF', '#FF0087'],
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          type: 'cross',
-          label: {
-            backgroundColor: '#6a7985',
+    if (this.timeSeries && this.timeSeries.values) {
+      const min = this.timeSeries ? Math.min(...this.timeSeries.values) : 0;
+      const max = this.timeSeries ? Math.max(...this.timeSeries.values) : 0;
+      const offset = 0.5;
+      this.chartOption = {
+        color: ['#FFBF00', '#80FFA5', '#00DDFF', '#37A2FF', '#FF0087'],
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross',
+            label: {
+              backgroundColor: '#6a7985',
+            },
           },
         },
-      },
-      xAxis: {
-        type: 'time',
-        boundaryGap: false,
-      },
-      yAxis: {
-        type: 'value',
-        min: Math.floor(min - offset),
-        max: Math.ceil(max + offset),
-      },
-      series: [
-        {
-          data: this.timeSeries
-            ? this.timeSeries.values.map((e, i) => [
-                this.timeSeries ? this.timeSeries.times[i] : 0,
-                e,
-              ])
-            : [],
-          type: 'line',
-          smooth: true,
-          showSymbol: false,
-          label: {
-            show: true,
-            position: 'top',
-          },
-          lineStyle: {
-            color: '#5470C6',
-            width: 3,
-          },
+        xAxis: {
+          type: 'time',
+          boundaryGap: false,
         },
-      ],
-    };
-    this.echartsInstance?.setOption(this.chartOption, true);
+        yAxis: {
+          type: 'value',
+          min: Math.floor(min - offset),
+          max: Math.ceil(max + offset),
+        },
+        series: [
+          {
+            data: this.timeSeries
+              ? this.timeSeries.values.map((e, i) => [
+                  this.timeSeries ? this.timeSeries.times[i] : 0,
+                  e,
+                ])
+              : [],
+            type: 'line',
+            smooth: true,
+            showSymbol: false,
+            label: {
+              show: true,
+              position: 'top',
+            },
+            lineStyle: {
+              color: '#5470C6',
+              width: 3,
+            },
+          },
+        ],
+      };
+      this.echartsInstance?.setOption(this.chartOption, true);
+    }
   }
 }

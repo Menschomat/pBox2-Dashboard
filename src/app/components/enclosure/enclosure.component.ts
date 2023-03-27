@@ -11,13 +11,13 @@ import { map, Observable } from 'rxjs';
 export class EnclosureComponent implements OnInit {
   enclosure$: Observable<Enclosure>;
   boxes$: Observable<Box[]>;
-  encName$: Observable<string>;
+  selectedBox$: Observable<Box | undefined>;
   sensorDataMap: Map<string, Map<string, Observable<TimeSeries>>> = new Map();
 
   constructor(private encService: EnclosureService) {
     this.enclosure$ = this.encService.getEnclosureConfig();
     this.boxes$ = this.encService.getBoxes();
-    this.encName$ = this.enclosure$.pipe(map((enc) => enc.name));
+    this.selectedBox$ = this.encService.selectedBox$;
     this.boxes$
       .pipe(
         map((boxes) => {
@@ -44,4 +44,8 @@ export class EnclosureComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+  selectBox(box: Box) {
+    localStorage.setItem('pbox2_selected_box', box.id);
+    this.encService.selectBox(box);
+  }
 }

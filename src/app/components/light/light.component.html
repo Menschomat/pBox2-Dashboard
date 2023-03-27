@@ -1,13 +1,21 @@
-<div class="container">
+<div class="container" *ngIf="light">
   <img
     class="image"
     src="assets/lightbulb-solid.svg"
     style="height: 2rem; width: auto; margin-right: 0.5rem; opacity: 0.6"
   />
   <div class="range-wrapper">
-    <label class="form-label" for="customRange1">{{ light?.name }}</label>
+    <label class="form-label" for="customRange1">{{ light.name }}</label>
     <div class="range">
-      <input type="range" class="form-range" id="customRange1" />
+      <input
+        type="range"
+        min="0"
+        max="100"
+        step="1"
+        class="form-range"
+        id="customRange1"
+        [(ngModel)]="light.level"
+      />
     </div>
   </div>
 </div>

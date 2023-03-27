@@ -18,13 +18,12 @@ export interface Fan {
   id: string;
   name: string;
   level:number;
-  pin: number;
 }
 
 export interface Light {
   id: string;
   name: string;
-  pins: number[];
+  level:number;
   type: string;
 }
 
