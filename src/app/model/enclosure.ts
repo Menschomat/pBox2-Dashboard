@@ -30,7 +30,6 @@ export interface Light {
 export interface Sensor {
   id: string;
   name: string;
-  pin: number;
   type: string;
   unit: string;
 }
