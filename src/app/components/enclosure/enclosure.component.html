@@ -34,7 +34,11 @@
         <div class="col">
           <h5>Fans:</h5>
           <div>
-            <app-fan *ngFor="let fan of box.fans" [fan]="fan"></app-fan>
+            <app-fan
+              *ngFor="let fan of box.fans"
+              [boxId]="box.id"
+              [fan]="fan"
+            ></app-fan>
           </div>
         </div>
         <div class="col">
