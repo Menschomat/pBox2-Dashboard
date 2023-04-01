@@ -16,6 +16,7 @@
         class="form-range"
         id="customRange1"
         [(ngModel)]="fan.level"
+        (ngModelChange)="updateFanData()"
       />
     </div>
   </div>

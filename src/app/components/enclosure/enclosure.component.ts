@@ -1,7 +1,9 @@
+import { BoxService } from 'src/app/services/box.service';
 import { Enclosure, Box, TimeSeries } from './../../model/enclosure';
 import { EnclosureService } from './../../services/enclosure.service';
 import { Component, OnInit } from '@angular/core';
 import { map, Observable } from 'rxjs';
+import { SensorService } from 'src/app/services/sensor.service';
 
 @Component({
   selector: 'app-enclosure',
@@ -9,15 +11,19 @@ import { map, Observable } from 'rxjs';
   styleUrls: ['./enclosure.component.scss'],
 })
 export class EnclosureComponent implements OnInit {
-  enclosure$: Observable<Enclosure>;
+  enclosure$: Observable<Enclosure | undefined>;
   boxes$: Observable<Box[]>;
   selectedBox$: Observable<Box | undefined>;
   sensorDataMap: Map<string, Map<string, Observable<TimeSeries>>> = new Map();
 
-  constructor(private encService: EnclosureService) {
-    this.enclosure$ = this.encService.getEnclosureConfig();
-    this.boxes$ = this.encService.getBoxes();
-    this.selectedBox$ = this.encService.selectedBox$;
+  constructor(
+    private encService: EnclosureService,
+    private boxService: BoxService,
+    private sensorService: SensorService
+  ) {
+    this.enclosure$ = this.encService.getEnclosure$();
+    this.boxes$ = this.boxService.getBoxes$();
+    this.selectedBox$ = this.boxService.selectedBox$;
     this.boxes$
       .pipe(
         map((boxes) => {
@@ -30,7 +36,7 @@ export class EnclosureComponent implements OnInit {
             box.sensors.forEach((sensor) => {
               boxSensors.set(
                 sensor.id,
-                this.encService.getSensorData(box.id, sensor.id)
+                this.sensorService.getSensorData(box.id, sensor.id)
               );
             });
             sensorDataMap.set(box.id, boxSensors);
@@ -46,6 +52,6 @@ export class EnclosureComponent implements OnInit {
   ngOnInit(): void {}
   selectBox(box: Box) {
     localStorage.setItem('pbox2_selected_box', box.id);
-    this.encService.selectBox(box);
+    this.boxService.selectBox(box);
   }
 }
