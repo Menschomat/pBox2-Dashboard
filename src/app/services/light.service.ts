@@ -8,7 +8,10 @@ import { Light } from '../model/enclosure';
 })
 export class LightService {
   constructor(private http: HttpClient) {}
-  public getFan(boxId: string, lightId: string): Observable<Light> {
-    return this.http.get<Light>(`/api/v1/${boxId}/fans/${lightId}`);
+  public getLight(boxId: string, lightId: string): Observable<Light> {
+    return this.http.get<Light>(`/api/v1/${boxId}/lights/${lightId}`);
+  }
+  public updateLight(boxId: string, light: Light): Observable<Light> {
+    return this.http.post<Light>(`/api/v1/${boxId}/lights/${light.id}`, light);
   }
 }

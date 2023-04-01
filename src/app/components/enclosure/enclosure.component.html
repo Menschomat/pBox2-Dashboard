@@ -46,6 +46,7 @@
           <div>
             <app-light
               *ngFor="let light of box.lights"
+              [boxId]="box.id"
               [light]="light"
             ></app-light>
           </div>

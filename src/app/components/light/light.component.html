@@ -15,6 +15,7 @@
         class="form-range"
         id="customRange1"
         [(ngModel)]="light.level"
+        (ngModelChange)="updateLightData()"
       />
     </div>
   </div>
