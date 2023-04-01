@@ -1,5 +1,5 @@
 import { Light } from './../../model/enclosure';
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-light',
@@ -8,5 +8,5 @@ import { Component, Input } from '@angular/core';
 })
 export class LightComponent {
   @Input()
-  light: Light | undefined;
+  light: Light | undefined
 }
