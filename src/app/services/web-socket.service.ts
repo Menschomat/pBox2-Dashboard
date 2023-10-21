@@ -7,6 +7,7 @@ import {
   BehaviorSubject,
   timeout,
   catchError,
+  tap,
 } from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
@@ -65,6 +66,7 @@ export class WebSocketService {
       delay: 3000,
     };
     return this.webSocket.asObservable().pipe(
+      tap((event) => console.log(event)),
       retry(retryConfig) //support auto reconnect
     );
   }
