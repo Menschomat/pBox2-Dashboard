@@ -23,7 +23,7 @@
     "bootstrap": "^5.2.3",
     "echarts": "^5.4.1",
     "echarts-gl": "^2.0.9",
-    "mdb-angular-ui-kit": "^4.0.0",
+    "mdb-angular-ui-kit": "^5.1.0",
     "ngx-echarts": "^15.0.1",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
