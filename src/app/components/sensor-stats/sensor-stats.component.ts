@@ -84,7 +84,7 @@ export class SensorStatsComponent implements OnInit, OnChanges {
         },
         xAxis: {
           type: 'time',
-          boundaryGap: false,
+         // boundaryGap: 0,
         },
         yAxis: {
           type: 'value',
