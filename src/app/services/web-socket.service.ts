@@ -25,8 +25,13 @@ export class WebSocketService {
     new BehaviorSubject<'connected' | 'pending' | 'disconnected'>(
       'disconnected'
     );
+  // Determine the protocol to use
+  private protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+
+  // Construct the URL
+  private webSocketUrl = `${this.protocol}//${window.location.host}/ws/subscribe`;
   private webSocket: WebSocketSubject<SocketEvent> = webSocket({
-    url: 'ws://localhost:8080/subscribe',
+    url: this.webSocketUrl,
     openObserver: {
       next: () => this.isConnected.next(true),
     },
