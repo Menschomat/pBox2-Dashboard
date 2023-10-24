@@ -32,6 +32,16 @@
     >
       <div class="row p-2">
         <div class="col">
+          <h5>Switches:</h5>
+          <div>
+            <app-switch
+              *ngFor="let switch of box.switches"
+              [boxId]="box.id"
+              [switch]="switch"
+            ></app-switch>
+          </div>
+        </div>
+        <div class="col">
           <h5>Fans:</h5>
           <div>
             <app-fan
