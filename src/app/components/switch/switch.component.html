@@ -1,13 +1,20 @@
-<div class="form-check form-switch" *ngIf="switch">
-  <input
-    class="form-check-input"
-    type="checkbox"
-    role="switch"
-    id="flexSwitchCheckDefault"
-    [(ngModel)]="switch.state"
-    (ngModelChange)="updateSwitchData()"
+<div class="container" *ngIf="switch">
+  <img
+    class="image"
+    src="assets/power-off-solid.svg"
+    style="height: 2rem; width: auto; margin-right: 0.5rem; opacity: 0.6"
   />
-  <label class="form-check-label" for="flexSwitchCheckDefault">{{
-    switch.name
-  }}</label>
+  <div class="range-wrapper">
+    <label class="form-label" for="customRange1">{{ switch.name }}</label>
+    <div class="form-check form-switch">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        role="switch"
+        id="flexSwitchCheckDefault"
+        [(ngModel)]="switch.state"
+        (ngModelChange)="updateSwitchData()"
+      />
+    </div>
+  </div>
 </div>
