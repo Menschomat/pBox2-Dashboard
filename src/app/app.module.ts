@@ -29,6 +29,7 @@ import { MdbValidationModule } from 'mdb-angular-ui-kit/validation';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IndicatorComponent } from './components/indicator/indicator.component';
 import { FormsModule } from '@angular/forms';
+import { SwitchComponent } from './components/switch/switch.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { FormsModule } from '@angular/forms';
     FanComponent,
     LightComponent,
     IndicatorComponent,
+    SwitchComponent,
   ],
   imports: [
     BrowserModule,
