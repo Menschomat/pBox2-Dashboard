@@ -6,6 +6,7 @@ export interface SocketEvent {
 }
 export enum SocketEventType {
   SENSOR = 'SENSOR',
+  SWITCH = 'SWITCH',
   LIGHT = 'LIGHT',
   FAN = 'FAN',
 }

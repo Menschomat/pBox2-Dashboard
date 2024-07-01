@@ -37,8 +37,9 @@
           <div>
             <app-switch
               *ngFor="let switch of box.switches"
+              [encId]="enc.id"
               [boxId]="box.id"
-              [switch]="switch"
+              [switchId]="switch.id"
             ></app-switch>
           </div>
         </div>
