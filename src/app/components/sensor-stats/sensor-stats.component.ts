@@ -1,17 +1,17 @@
-import { SensorEventBody } from './../../model/events/sensor-event';
+import { SensorService } from 'src/app/services/sensor.service';
 import { TimeSeries } from './../../model/enclosure';
 import {
   ChangeDetectionStrategy,
   Component,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   SimpleChanges,
 } from '@angular/core';
 import { EChartsOption } from 'echarts';
 import { WebSocketService } from 'src/app/services/web-socket.service';
-import { debounceTime, filter, fromEvent, map, takeWhile } from 'rxjs';
-import { SocketEventType } from 'src/app/model/events/socket-event';
+import { debounceTime, Observable, fromEvent, Subscription } from 'rxjs';
 import * as echarts from 'echarts';
 
 @Component({
@@ -20,44 +20,50 @@ import * as echarts from 'echarts';
   templateUrl: './sensor-stats.component.html',
   styleUrls: ['./sensor-stats.component.scss'],
 })
-export class SensorStatsComponent implements OnInit, OnChanges {
+export class SensorStatsComponent implements OnInit, OnDestroy {
   @Input()
-  timeSeries: TimeSeries | undefined | null;
+  sensorId!: string;
   @Input()
-  sensorId?: string | null;
+  boxId!: string;
   @Input()
-  boxId?: string | null;
-  @Input()
-  encId?: string | null;
+  encId!: string;
   echartsInstance: any;
-  chartOption: EChartsOption | undefined;
+  chartOption: EChartsOption = {
+    color: ['#FFBF00', '#80FFA5', '#00DDFF', '#37A2FF', '#FF0087'],
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'cross',
+        label: {
+          backgroundColor: '#6a7985',
+        },
+      },
+    },
+    xAxis: {
+      type: 'time',
+      // boundaryGap: 0,
+    },
+    yAxis: {
+      type: 'value',
+    },
+    series: [],
+  };
+  private tsSubscription: Subscription | undefined;
 
-  constructor(private webSocket: WebSocketService) {}
+  constructor(private sensorService: SensorService) {}
 
   ngOnInit(): void {
-    this.webSocket
-      .getWebsocket()
-      .pipe(
-        filter((event) => event.type == SocketEventType.SENSOR),
-        filter((event) => event.topic == `${this.encId}/${this.boxId}`),
-        map((event) => event.body as SensorEventBody),
-        filter((body) => body.id == this.sensorId)
-      )
-      .subscribe((msg) => {
-        this.timeSeries?.times.push(msg.time);
-        this.timeSeries?.values.push(msg.value);
-        if (this.timeSeries && this.timeSeries.times.length > 500) {
-          this.timeSeries.times.shift();
-          this.timeSeries.values.shift();
-        }
-        this.updateChart();
+    this.tsSubscription = this.sensorService
+      .getSensorData(this.boxId, this.sensorId, this.encId)
+      .subscribe((ts) => {
+        this.updateChart(ts);
       });
   }
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['timeSeries']) {
-      this.updateChart();
-    }
+  ngOnDestroy(): void {
+    if (this.tsSubscription?.closed) return;
+    this.tsSubscription?.unsubscribe();
   }
+
   onChartInit(ec: any) {
     this.echartsInstance = ec;
     fromEvent(window, 'resize')
@@ -66,54 +72,53 @@ export class SensorStatsComponent implements OnInit, OnChanges {
         this.echartsInstance?.resize();
       });
   }
-  updateChart() {
-    if (this.timeSeries && this.timeSeries.values) {
-      const min = this.timeSeries ? Math.min(...this.timeSeries.values) : 0;
-      const max = this.timeSeries ? Math.max(...this.timeSeries.values) : 0;
-      const offset = 0.5;
-      this.chartOption = {
-        color: ['#FFBF00', '#80FFA5', '#00DDFF', '#37A2FF', '#FF0087'],
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'cross',
-            label: {
-              backgroundColor: '#6a7985',
-            },
+  updateChart(timeSeries: TimeSeries) {
+    if (!(timeSeries && timeSeries.values)) return;
+    const min = timeSeries ? Math.min(...timeSeries.values) : 0;
+    const max = timeSeries ? Math.max(...timeSeries.values) : 0;
+    const offset = 0.5;
+    this.chartOption = {
+      color: ['#FFBF00', '#80FFA5', '#00DDFF', '#37A2FF', '#FF0087'],
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'cross',
+          label: {
+            backgroundColor: '#6a7985',
           },
         },
-        xAxis: {
-          type: 'time',
-         // boundaryGap: 0,
-        },
-        yAxis: {
-          type: 'value',
-          min: Math.floor(min - offset),
-          max: Math.ceil(max + offset),
-        },
-        series: [
-          {
-            data: this.timeSeries
-              ? this.timeSeries.values.map((e, i) => [
-                  this.timeSeries ? this.timeSeries.times[i] : 0,
-                  e,
-                ])
-              : [],
-            type: 'line',
-            smooth: true,
-            showSymbol: false,
-            label: {
-              show: true,
-              position: 'top',
-            },
-            lineStyle: {
-              color: '#5470C6',
-              width: 3,
-            },
+      },
+      xAxis: {
+        type: 'time',
+        // boundaryGap: 0,
+      },
+      yAxis: {
+        type: 'value',
+        min: Math.floor(min - offset),
+        max: Math.ceil(max + offset),
+      },
+      series: [
+        {
+          data: timeSeries
+            ? timeSeries.values.map((e, i) => [
+                timeSeries ? timeSeries.times[i] : 0,
+                e,
+              ])
+            : [],
+          type: 'line',
+          smooth: true,
+          showSymbol: false,
+          label: {
+            show: true,
+            position: 'top',
           },
-        ],
-      };
-      this.echartsInstance?.setOption(this.chartOption, true);
-    }
+          lineStyle: {
+            color: '#5470C6',
+            width: 3,
+          },
+        },
+      ],
+    };
+    this.echartsInstance?.setOption(this.chartOption, true);
   }
 }
