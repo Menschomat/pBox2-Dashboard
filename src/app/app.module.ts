@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { NgxEchartsModule } from 'ngx-echarts';
 
@@ -16,28 +16,21 @@ import { IndicatorComponent } from './components/indicator/indicator.component';
 import { FormsModule } from '@angular/forms';
 import { SwitchComponent } from './components/switch/switch.component';
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    PrintBoxComponent,
-    SensorStatsComponent,
-    EnclosureComponent,
-    FanComponent,
-    LightComponent,
-    IndicatorComponent,
-    SwitchComponent,
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    NgxEchartsModule.forRoot({
-      echarts: () => import('echarts')
-    }),
-    FormsModule,
-    BrowserAnimationsModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent],
-})
+@NgModule({ declarations: [
+        AppComponent,
+        PrintBoxComponent,
+        SensorStatsComponent,
+        EnclosureComponent,
+        FanComponent,
+        LightComponent,
+        IndicatorComponent,
+        SwitchComponent,
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        AppRoutingModule,
+        NgxEchartsModule.forRoot({
+            echarts: () => import('echarts')
+        }),
+        FormsModule,
+        BrowserAnimationsModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule {}
