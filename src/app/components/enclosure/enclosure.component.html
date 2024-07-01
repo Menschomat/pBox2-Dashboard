@@ -1,8 +1,8 @@
 <nav class="navbar navbar-dark bg-dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#"
-      >{{ (enclosure$ | async)?.name }}&nbsp;&nbsp;<app-indicator
-        style="margin-top: 0.1rem"
+    <a class="navbar-brand d-flex flex-row"  href="#"
+      >{{ (enclosure$ | async)?.name }}<app-indicator
+        style="margin-top: .5rem; margin-left: 1rem;"
       ></app-indicator
     ></a>
 
@@ -19,6 +19,7 @@
         <li class="nav-item" *ngFor="let box of boxes$ | async; index as i">
           <a
             class="nav-link active"
+            style="cursor: pointer;"
             (click)="selectBox(box)"
             [class.active]="(selectedBox$ | async)?.id === box.id"
             >{{ box.name }}</a
