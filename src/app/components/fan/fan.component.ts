@@ -1,4 +1,4 @@
-import { Observable, Subject, Subscription, debounceTime } from 'rxjs';
+import { Subject, Subscription, debounceTime } from 'rxjs';
 import { FanService } from 'src/app/services/fan.service';
 import { Fan } from './../../model/enclosure';
 import {
@@ -44,7 +44,7 @@ export class FanComponent implements OnInit, OnDestroy {
       });
   }
   ngOnDestroy(): void {
-    if (this.fanSubscription?.closed) return;
+    if (!this.fanSubscription || this.fanSubscription.closed) return;
     this.fanSubscription?.unsubscribe();
   }
   updateFanData() {

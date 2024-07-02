@@ -57,7 +57,7 @@ export class SensorStatsComponent implements OnInit, OnDestroy {
       });
   }
   ngOnDestroy(): void {
-    if (this.tsSubscription?.closed) return;
+    if (!this.tsSubscription || this.tsSubscription.closed) return;
     this.tsSubscription?.unsubscribe();
   }
 

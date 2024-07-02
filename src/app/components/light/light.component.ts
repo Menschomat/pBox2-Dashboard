@@ -1,29 +1,35 @@
 import { LightService } from './../../services/light.service';
-import { Subject, debounceTime, filter, map } from 'rxjs';
+import { Subject, Subscription, debounceTime } from 'rxjs';
 import { Light } from './../../model/enclosure';
-import { Component, Input, OnInit, Output } from '@angular/core';
-import { WebSocketService } from 'src/app/services/web-socket.service';
-import { SocketEventType } from 'src/app/model/events/socket-event';
-import { LightEventBody } from 'src/app/model/events/light-event';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 
 @Component({
   selector: 'app-light',
   templateUrl: './light.component.html',
   styleUrls: ['./light.component.scss'],
 })
-export class LightComponent implements OnInit {
-  private lightUpdateSubj: Subject<Light> = new Subject();
+export class LightComponent implements OnInit, OnDestroy {
   @Input()
-  encId?: string | null;
+  encId!: string;
   @Input()
-  boxId: string | undefined;
+  boxId!: string;
+  @Input()
+  lightId!: string;
 
-  @Input()
   light: Light | undefined;
+
+  private lightUpdateSubj: Subject<Light> = new Subject();
+  private lightSubscription: Subscription | undefined;
 
   constructor(
     private lightService: LightService,
-    private webSocket: WebSocketService
+    private cd: ChangeDetectorRef
   ) {
     this.lightUpdateSubj.pipe(debounceTime(500)).subscribe((light) => {
       if (this.boxId && this.light)
@@ -33,22 +39,14 @@ export class LightComponent implements OnInit {
     });
   }
   ngOnInit(): void {
-    this.webSocket
-      .getWebsocket()
-      .pipe(
-        filter((event) => event.type == SocketEventType.LIGHT),
-        filter((event) => event.topic == `${this.encId}/${this.boxId}`),
-        map((event) => event.body as LightEventBody),
-        filter((body) => body.id == this.light?.id)
-      )
-      .subscribe((msg) => {
-        if (this.light) {
-          this.light.level = msg.value;
-          this.updateLightData();
-        }
-      });
+    this.lightSubscription = this.lightService
+      .getLight(this.boxId, this.lightId, this.encId)
+      .subscribe((aLight) => (this.light = aLight));
   }
-
+  ngOnDestroy(): void {
+    if (!this.lightSubscription || this.lightSubscription.closed) return;
+    this.lightSubscription.unsubscribe();
+  }
   updateLightData() {
     if (this.light) this.lightUpdateSubj.next(this.light);
   }

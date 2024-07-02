@@ -4,5 +4,6 @@ export interface LightEvent extends SocketEvent {
 }
 export interface LightEventBody {
   id: string;
+  name: string;
   value: number;
 }
