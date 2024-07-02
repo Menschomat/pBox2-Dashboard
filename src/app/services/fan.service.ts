@@ -27,7 +27,7 @@ export class FanService {
           filter((body) => body.id === fanId),
           map((event) => {
             console.log(event)
-            return { id: event.id, level: event.value, name: '' } as Fan;
+            return { id: event.id, level: event.value, name: event.name } as Fan;
           }),
           startWith(initialData)
         );

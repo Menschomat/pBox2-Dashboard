@@ -4,5 +4,6 @@ export interface SwitchEvent extends SocketEvent {
 }
 export interface SwitchEventBody {
   id: string;
+  name: string;
   state: boolean;
 }

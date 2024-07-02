@@ -1,10 +1,18 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Switch } from 'src/app/model/enclosure';
 import { SwitchService } from 'src/app/services/switch.service';
 
 @Component({
   selector: 'app-switch',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './switch.component.html',
   styleUrls: ['./switch.component.scss'],
 })
@@ -20,12 +28,16 @@ export class SwitchComponent implements OnInit, OnDestroy {
 
   private swtSubscription: Subscription | undefined;
 
-  constructor(private switchService: SwitchService) {}
+  constructor(
+    private switchService: SwitchService,
+    private cd: ChangeDetectorRef
+  ) {}
   ngOnInit(): void {
     this.swtSubscription = this.switchService
       .getSwitch(this.boxId, this.switchId, this.encId)
       .subscribe((switc) => {
         this.switch = switc;
+        this.cd.markForCheck();
       });
   }
   updateSwitchData() {

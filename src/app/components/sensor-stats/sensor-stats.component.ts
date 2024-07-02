@@ -4,14 +4,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
-  OnChanges,
   OnDestroy,
   OnInit,
-  SimpleChanges,
 } from '@angular/core';
 import { EChartsOption } from 'echarts';
-import { WebSocketService } from 'src/app/services/web-socket.service';
-import { debounceTime, Observable, fromEvent, Subscription } from 'rxjs';
+import { debounceTime, fromEvent, Subscription } from 'rxjs';
 import * as echarts from 'echarts';
 
 @Component({

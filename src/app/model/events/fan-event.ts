@@ -4,5 +4,6 @@ export interface FanEvent extends SocketEvent {
 }
 export interface FanEventBody {
   id: string;
+  name: string;
   value: number;
 }

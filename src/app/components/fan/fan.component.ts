@@ -1,11 +1,18 @@
 import { Observable, Subject, Subscription, debounceTime } from 'rxjs';
 import { FanService } from 'src/app/services/fan.service';
 import { Fan } from './../../model/enclosure';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { SwitchService } from 'src/app/services/switch.service';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 
 @Component({
   selector: 'app-fan',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './fan.component.html',
   styleUrls: ['./fan.component.scss'],
 })
@@ -21,7 +28,7 @@ export class FanComponent implements OnInit, OnDestroy {
   public fan: Fan | undefined;
 
   private fanSubscription: Subscription | undefined;
-  constructor(private fanService: FanService) {
+  constructor(private fanService: FanService, private cd: ChangeDetectorRef) {
     this.fanUpdateSubj
       .pipe(debounceTime(500))
       .subscribe((fan) =>
@@ -33,6 +40,7 @@ export class FanComponent implements OnInit, OnDestroy {
       .getFan(this.boxId, this.fanId, this.encId)
       .subscribe((aFan) => {
         this.fan = aFan;
+        this.cd.markForCheck();
       });
   }
   ngOnDestroy(): void {

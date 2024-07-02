@@ -25,7 +25,7 @@ export class SwitchService {
           map((event) => event.body as SwitchEventBody),
           filter((body) => body.id === switchId),
           map((event) => {
-            return { id: event.id, state: event.state, name: '' } as Switch;
+            return { id: event.id, state: event.state, name: event.name } as Switch;
           }),
           startWith(initialData)
         );
