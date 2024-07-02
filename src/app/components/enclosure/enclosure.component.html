@@ -49,8 +49,9 @@
           <div>
             <app-fan
               *ngFor="let fan of box.fans"
+              [encId]="enc.id"
               [boxId]="box.id"
-              [fan]="fan"
+              [fanId]="fan.id"
             ></app-fan>
           </div>
         </div>

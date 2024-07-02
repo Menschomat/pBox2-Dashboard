@@ -1,30 +1,46 @@
-import { Subject, debounceTime } from 'rxjs';
+import { Observable, Subject, Subscription, debounceTime } from 'rxjs';
 import { FanService } from 'src/app/services/fan.service';
 import { Fan } from './../../model/enclosure';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { SwitchService } from 'src/app/services/switch.service';
 
 @Component({
   selector: 'app-fan',
   templateUrl: './fan.component.html',
   styleUrls: ['./fan.component.scss'],
 })
-export class FanComponent {
+export class FanComponent implements OnInit, OnDestroy {
   private fanUpdateSubj: Subject<Fan> = new Subject();
 
   @Input()
-  boxId: string | undefined;
-
+  encId!: string;
   @Input()
-  fan: Fan | undefined;
+  boxId!: string;
+  @Input()
+  fanId!: string;
+  public fan: Fan | undefined;
 
+  private fanSubscription: Subscription | undefined;
   constructor(private fanService: FanService) {
-    this.fanUpdateSubj.pipe(debounceTime(500)).subscribe((fan) => {
-      if (this.boxId && this.fan)
-        this.fanService.updateFan(this.boxId, this.fan).subscribe((fan) => fan);
-    });
+    this.fanUpdateSubj
+      .pipe(debounceTime(500))
+      .subscribe((fan) =>
+        this.fanService.updateFan(this.boxId, fan).subscribe((fan) => fan)
+      );
   }
-
+  ngOnInit(): void {
+    this.fanSubscription = this.fanService
+      .getFan(this.boxId, this.fanId, this.encId)
+      .subscribe((aFan) => {
+        this.fan = aFan;
+      });
+  }
+  ngOnDestroy(): void {
+    if (this.fanSubscription?.closed) return;
+    this.fanSubscription?.unsubscribe();
+  }
   updateFanData() {
-    if (this.fan) this.fanUpdateSubj.next(this.fan);
+    if (!this.fan) return;
+    this.fanUpdateSubj.next(this.fan);
   }
 }

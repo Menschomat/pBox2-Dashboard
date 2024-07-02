@@ -26,6 +26,7 @@ export class FanService {
           map((event) => event.body as FanEventBody),
           filter((body) => body.id === fanId),
           map((event) => {
+            console.log(event)
             return { id: event.id, level: event.value, name: '' } as Fan;
           }),
           startWith(initialData)
@@ -34,6 +35,7 @@ export class FanService {
     );
   }
   public updateFan(boxId: string, fan: Fan): Observable<Fan> {
+    console.log(fan)
     return this.http.post<Fan>(`/api/v1/${boxId}/fans/${fan.id}`, fan);
   }
 }
