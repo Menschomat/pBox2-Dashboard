@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, filter, map, tap } from 'rxjs';
-import { Box, Enclosure } from '../model/enclosure';
-import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, map, tap } from 'rxjs';
+import { Box } from '../model/enclosure';
 import { EnclosureService } from './enclosure.service';
 
 @Injectable({

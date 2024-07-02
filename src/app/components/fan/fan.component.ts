@@ -1,4 +1,4 @@
-import { Subject, filter, debounceTime } from 'rxjs';
+import { Subject, debounceTime } from 'rxjs';
 import { FanService } from 'src/app/services/fan.service';
 import { Fan } from './../../model/enclosure';
 import { Component, Input } from '@angular/core';

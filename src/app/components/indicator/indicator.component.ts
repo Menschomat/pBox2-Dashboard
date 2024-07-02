@@ -13,8 +13,6 @@ export class IndicatorComponent {
 
   constructor(private webSocket: WebSocketService) {
     webSocket.getSockState$().subscribe((state) => {
-      console.log(state);
-
       if (state === 'connected') {
         this.color = 'green';
         this.pulse = true;

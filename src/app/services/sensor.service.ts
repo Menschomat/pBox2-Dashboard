@@ -1,14 +1,7 @@
 import { TimeSeries } from './../model/enclosure';
 import { WebSocketService } from './web-socket.service';
 import { Injectable } from '@angular/core';
-import {
-  Observable,
-  filter,
-  map,
-  scan,
-  startWith,
-  switchMap,
-} from 'rxjs';
+import { Observable, filter, map, scan, startWith, switchMap } from 'rxjs';
 import { Sensor } from '../model/enclosure';
 import { HttpClient } from '@angular/common/http';
 import { SensorEventBody } from '../model/events/sensor-event';
@@ -22,14 +15,7 @@ export class SensorService {
   public getSensor(boxId: string, sensorId: string): Observable<Sensor> {
     return this.http.get<Sensor>(`/api/v1/${boxId}/sensors/${sensorId}`);
   }
-  private getInitialData(
-    boxId: string,
-    sensorId: string
-  ): Observable<TimeSeries> {
-    return this.http.get<TimeSeries>(
-      `/api/v1/${boxId}/sensors/${sensorId}/data`
-    );
-  }
+
   public getSensorData(
     boxId: string,
     sensorId: string,
@@ -57,6 +43,14 @@ export class SensorService {
           })
         );
       })
+    );
+  }
+  private getInitialData(
+    boxId: string,
+    sensorId: string
+  ): Observable<TimeSeries> {
+    return this.http.get<TimeSeries>(
+      `/api/v1/${boxId}/sensors/${sensorId}/data`
     );
   }
 }

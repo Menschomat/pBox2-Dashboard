@@ -3,11 +3,22 @@
   justify-content: center;
 }
 .container {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 .range-wrapper {
-    margin-left: 1rem;
-    max-width: 15rem;
-    flex: 1;
+  margin-left: 1rem;
+  max-width: 15rem;
+  flex: 1;
+}
+.spinn {
+  animation: spin 4s linear infinite;
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
   }
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,5 +1,5 @@
-import { Observable, map, BehaviorSubject, tap } from 'rxjs';
-import { Enclosure, Box, TimeSeries } from './../model/enclosure';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { Enclosure } from './../model/enclosure';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -22,6 +22,4 @@ export class EnclosureService {
   private fetchEnclosureConfig(): Observable<Enclosure> {
     return this.http.get<Enclosure>('/api/v1/enclosure');
   }
-
-
 }

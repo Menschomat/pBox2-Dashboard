@@ -71,7 +71,7 @@ export class WebSocketService {
       delay: 3000,
     };
     return this.webSocket.asObservable().pipe(
-      tap((event) => console.debug(event)),
+      //tap((event) => console.debug(event)),
       retry(retryConfig) //support auto reconnect
     );
   }

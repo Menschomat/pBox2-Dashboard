@@ -1,19 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, filter, map, scan, startWith, switchMap } from 'rxjs';
+import { Observable, filter, map, startWith, switchMap } from 'rxjs';
 import { Switch } from '../model/enclosure';
 import { WebSocketService } from './web-socket.service';
 import { SocketEventType } from '../model/events/socket-event';
-import { SwitchEventBody } from '../model/events/fan-event copy';
+import { SwitchEventBody } from '../model/events/switch-event';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SwitchService {
   constructor(private http: HttpClient, private webSocket: WebSocketService) {}
-  private getInitialData(boxId: string, switchId: string): Observable<Switch> {
-    return this.http.get<Switch>(`/api/v1/${boxId}/switches/${switchId}`);
-  }
 
   public getSwitch(
     boxId: string,
@@ -41,5 +38,9 @@ export class SwitchService {
       `/api/v1/${boxId}/switches/${switc.id}`,
       switc
     );
+  }
+
+  private getInitialData(boxId: string, switchId: string): Observable<Switch> {
+    return this.http.get<Switch>(`/api/v1/${boxId}/switches/${switchId}`);
   }
 }
